@@ -86,20 +86,20 @@ if __name__ == '__main__':
     path_old = "C:\Users\Joe Kleinhans\Desktop\New folder\Docs.txt"
     path = "testData.json"
     json_input = open(path, 'r')
-count = 0
-const_line = '{ "create": { "_index": "klenhns2_bigindex", "_type": "doc"}}'
+    count = 0
+    const_line = '{ "create": { "_index": "klenhns2_bigindex", "_type": "doc"}}'
 
-for item in ijson.items(json_input, "item"):
-    doc_line = '{"doc_id": "' + item['doc_id'] + '", "url": "' + item['url'] + '", "title": "' + item['title'] + '", "body": "' \
-          + item['body'] + '"}\n'
-    doc_line.decode('utf-8')
+    for item in ijson.items(json_input, "item"):
+        doc_line = '{"doc_id": "' + item['doc_id'] + '", "url": "' + item['url'] + '", "title": "' + item['title'] + '", "body": "' \
+              + item['body'] + '"}\n'
+        doc_line.decode('utf-8')
 
-    bulk_data += const_line
-    bulk_data += doc_line
+        bulk_data += const_line
+        bulk_data += doc_line
 
-    if count % 100 == 0:
+        if count % 100 == 0:
+            res = es.bulk(index = klenhns2_bigindex, body = bulk_data, refresh = True, request_timeout = 100)
+            bulk_data = ''
+
+    if bulk_data != '':
         res = es.bulk(index = klenhns2_bigindex, body = bulk_data, refresh = True, request_timeout = 100)
-        bulk_data = ''
-
-if bulk_data != '':
-    res = es.bulk(index = klenhns2_bigindex, body = bulk_data, refresh = True, request_timeout = 100)
