@@ -23,27 +23,6 @@ request_body = {
 		"number_of_replicas":0
 	}
 }
-#       JOE'S ADDITION
-path = "C:/Users/WHEREVER_IT_IS"
-json_input = open(path, 'r')
-data = json.loads(json_input.read())
-
-for doc in data:
-    one_line = '{"doc_id": "' + doc.doc_id + '", "url": "' + doc.url + '", "title": "' + doc.title + '", "body": "' + doc.body + '"},'
-
-
-len(data)
-    """
-    {
-        "doc_id": "some_text_id_2",
-        "url": "some/url",
-        "title": "some text",
-        "body": "some text"
-    },
-
-    {"doc_id": "ID", "url": "myURL", "title": "myTitle", "body": "myBody"},
-    """
-#       JOES ADDITION
 
 print("creating gonnell2_index")
 res = es.indices.create(index = gonnell2_index, body = request_body)
@@ -88,16 +67,31 @@ es.indices.put_mapping(
 	}
 )
 #bulk index
-bulk_file = open('/home/mgonnella41/cs410/indexed_data.txt', 'r')
-for i in range(0,36):
-	bulk_data = ''
-	line_in = ''
-	for j in range(0,622):
-		line_in  = bulk_file.readline()
-		line_in = line_in.decode('utf-8')
-		bulk_data += line_in
+path = "testData.json"
+json_input = open(path, 'r')
+json_data = json.loads(json_input.read())
+print("finished reading json")
+const_line = '{ "create": { "_index": "gonnell2_bigindex", "_type": "doc"}}'
+count = 0
+for i in range(0,3920):     #last is short (61)
+    bulk_data = ''
+    line_in = ''
+    doc = json_data[count]
+    if i == 3919:
+        for k in range(0,60):
+            line_in  = json.dumps(doc)
+            line_in = line_in.decode('utf-8')
+            bulk_data += const_line
+            bulk_data += line_in
+            count += 1
+    else:    
+        for j in range(0,100):
+            line_in  = json.dumps(doc)
+            line_in = line_in.decode('utf-8')
+            bulk_data += const_line
+            bulk_data += line_in
+            count += 1
+            
 	print("bulk indexing...") 
 	print(i)
 	res = es.bulk(index = gonnell2_index, body = bulk_data, refresh = True, request_timeout = 100)
-
-bulk_file.close()
