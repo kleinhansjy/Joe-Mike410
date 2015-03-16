@@ -1,0 +1,14 @@
+[
+  {
+    "doc_id": "some_text_id_1",
+    "url": "some/url",
+    "title": "some text",
+    "body": "some text"
+  },
+  {
+    "doc_id": "some_text_id_2",
+    "url": "some/url",
+    "title": "some text",
+    "body": "some text"
+  }
+]
